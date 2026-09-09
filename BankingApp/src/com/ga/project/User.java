@@ -1,7 +1,5 @@
 package com.ga.project;
 
-
-
 public abstract class User {
     protected String id;
     protected String name;
