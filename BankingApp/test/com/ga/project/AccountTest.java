@@ -41,12 +41,13 @@ public class AccountTest {
     }
 
     @Test
-    @DisplayName("When withdrawing more than balance then INSUFFICIENT_FUNDS is returned and balance is unchanged")
-    public final void whenWithdrawExceedsBalanceThenInsufficientFundsReturned() {
+    @DisplayName("When withdrawing more than balance then overdraft applies (SUCCESS with fee)")
+    public final void whenWithdrawExceedsBalanceThenOverdraftApplies() {
         account.deposit(500);
         String result = account.withdraw(1000);
-        Assert.assertEquals("INSUFFICIENT_FUNDS", result);
-        Assert.assertEquals(500.0, account.getBalance(), 0.001);
+        Assert.assertEquals("SUCCESS", result);
+        // 500 - 1000 - 35 fee = -535
+        Assert.assertEquals(-535.0, account.getBalance(), 0.001);
     }
 
     @Test

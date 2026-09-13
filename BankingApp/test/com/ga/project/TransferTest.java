@@ -24,7 +24,7 @@ public class TransferTest {
     @Test
     @DisplayName("When transferring between own accounts then balances update correctly")
     public final void whenTransferBetweenOwnAccountsThenBalancesUpdate() {
-        String result = checking.transferTo(savings, 200);
+        String result = checking.transferTo(savings, 200, true);
 
         Assert.assertEquals("SUCCESS", result);
         Assert.assertEquals(300.0, checking.getBalance(), 0.001);
@@ -34,7 +34,7 @@ public class TransferTest {
     @Test
     @DisplayName("When transferring to another customer's account then balances update correctly")
     public final void whenTransferToOtherCustomerThenBalancesUpdate() {
-        String result = checking.transferTo(otherCustomerAccount, 150);
+        String result = checking.transferTo(otherCustomerAccount, 150, false);
 
         Assert.assertEquals("SUCCESS", result);
         Assert.assertEquals(350.0, checking.getBalance(), 0.001);
@@ -44,12 +44,12 @@ public class TransferTest {
     @Test
     @DisplayName("When transfer causes overdraft then fee is applied to sender only")
     public final void whenTransferCausesOverdraftThenFeeAppliedToSenderOnly() {
-        String result = checking.transferTo(savings, 600); // exceeds 500 balance
+        String result = checking.transferTo(savings, 600, true);
 
         Assert.assertEquals("SUCCESS", result);
         // 500 - 600 - 35 fee = -135
         Assert.assertEquals(-135.0, checking.getBalance(), 0.001);
-        Assert.assertEquals(600.0, savings.getBalance(), 0.001); // receiver gets full amount, no fee
+        Assert.assertEquals(600.0, savings.getBalance(), 0.001);
     }
 
     @Test
@@ -59,9 +59,9 @@ public class TransferTest {
         checking.deposit(135);  // back to 0
         checking.withdraw(50);  // 2nd overdraft, deactivated
 
-        String result = checking.transferTo(savings, 10);
+        String result = checking.transferTo(savings, 10, true);
 
         Assert.assertEquals("ACCOUNT_DEACTIVATED", result);
-        Assert.assertEquals(0.0, savings.getBalance(), 0.001); // nothing was deposited
+        Assert.assertEquals(0.0, savings.getBalance(), 0.001);
     }
 }

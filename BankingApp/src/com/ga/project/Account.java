@@ -29,9 +29,13 @@ public abstract class Account {
             return "INVALID_AMOUNT";
         }
 
+        String limitCheck = card.checkAndRecordDeposit(amount);
+        if (!limitCheck.equals("SUCCESS")) {
+            return limitCheck;
+        }
+
         balance += amount;
         recordTransaction("DEPOSIT", amount);
-
         overdraftPolicy.reactivateIfEligible(this);
 
         return "SUCCESS";
@@ -40,6 +44,11 @@ public abstract class Account {
     public String withdraw(double amount) {
         if (amount <= 0) {
             return "INVALID_AMOUNT";
+        }
+
+        String limitCheck = card.checkAndRecordWithdraw(amount);
+        if (!limitCheck.equals("SUCCESS")) {
+            return limitCheck;
         }
 
         String result = overdraftPolicy.processWithdrawal(this, amount);
@@ -51,6 +60,29 @@ public abstract class Account {
         return result;
     }
 
+    public String transferTo(Account destination, double amount, boolean isOwnAccount) {
+        String transferLimitCheck = card.checkAndRecordTransfer(amount, isOwnAccount);
+        if (!transferLimitCheck.equals("SUCCESS")) {
+            return transferLimitCheck;
+        }
+
+        String receivingLimitCheck = destination.card.checkAndRecordIncomingTransfer(amount);
+        if (!receivingLimitCheck.equals("SUCCESS")) {
+            return receivingLimitCheck;
+        }
+
+        String withdrawResult = this.withdraw(amount);
+        if (!withdrawResult.equals("SUCCESS")) {
+            return withdrawResult;
+        }
+
+        destination.balance += amount;
+        destination.recordTransaction("DEPOSIT", amount);
+        destination.overdraftPolicy.reactivateIfEligible(destination);
+
+        return "SUCCESS";
+    }
+
     protected void recordTransaction(String type, double amount) {
         Transaction transaction = new Transaction(
                 UUID.randomUUID().toString(),
@@ -60,16 +92,6 @@ public abstract class Account {
                 LocalDateTime.now()
         );
         transactions.add(transaction);
-    }
-    public String transferTo(Account destination, double amount) {
-        String withdrawResult = this.withdraw(amount);
-
-        if (!withdrawResult.equals("SUCCESS")) {
-            return withdrawResult;
-        }
-
-        destination.deposit(amount);
-        return "SUCCESS";
     }
 
     public String getAccountNumber() {
