@@ -16,6 +16,7 @@ public abstract class User {
         this.failedLoginCount = 0;
         this.lockedUntil = null;
     }
+    public abstract String getRole();
 
     public String getId() {
         return id;
