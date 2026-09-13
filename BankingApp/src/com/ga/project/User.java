@@ -4,30 +4,45 @@ import java.time.LocalDateTime;
 
 public abstract class User {
     protected String id;
-    protected String name;
+    protected String firstName;
+    protected String lastName;
     protected String encryptedPassword;
     protected int failedLoginCount;
     protected LocalDateTime lockedUntil;
 
-    public User(String id, String name, String encryptedPassword) {
+    public User(String id, String firstName, String lastName, String encryptedPassword) {
         this.id = id;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.encryptedPassword = encryptedPassword;
         this.failedLoginCount = 0;
         this.lockedUntil = null;
     }
+
     public abstract String getRole();
 
     public String getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 
     public String getEncryptedPassword() {

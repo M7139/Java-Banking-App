@@ -17,11 +17,11 @@ public class AuthenticationTest {
         passwordEncryptor = new PasswordEncryptor();
         authentication = new Authentication(passwordEncryptor);
         String encrypted = passwordEncryptor.encrypt(rawPassword);
-        customer = new Customer("1", "Saad Iqbal", encrypted);
+        customer = new Customer("10001", "Saad", "Iqbal", encrypted);
     }
 
     @Test
-    @DisplayName("correct password = success + counter reset")
+    @DisplayName("When password is correct then login returns SUCCESS and resets failed count")
     public final void whenPasswordIsCorrectThenLoginSucceeds() {
         String result = authentication.login(customer, rawPassword);
         Assert.assertEquals("SUCCESS", result);
@@ -30,7 +30,7 @@ public class AuthenticationTest {
     }
 
     @Test
-    @DisplayName("wrong password")
+    @DisplayName("When password is wrong then login returns INVALID_PASSWORD")
     public final void whenPasswordIsWrongThenInvalidPasswordReturned() {
         String result = authentication.login(customer, "wrongPassword");
         Assert.assertEquals("INVALID_PASSWORD", result);
@@ -38,7 +38,7 @@ public class AuthenticationTest {
     }
 
     @Test
-    @DisplayName("if 3 failed account will lock")
+    @DisplayName("When 3 failed attempts happen then next login returns LOCKED")
     public final void whenThreeFailedAttemptsThenAccountLocks() {
         authentication.login(customer, "wrongPassword");
         authentication.login(customer, "wrongPassword");

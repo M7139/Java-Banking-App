@@ -6,8 +6,8 @@ public class Customer extends User {
     private Optional<CheckingAccount> checkingAccount;
     private Optional<SavingsAccount> savingsAccount;
 
-    public Customer(String id, String name, String encryptedPassword) {
-        super(id, name, encryptedPassword);
+    public Customer(String id, String firstName, String lastName, String encryptedPassword) {
+        super(id, firstName, lastName, encryptedPassword);
         this.checkingAccount = Optional.empty();
         this.savingsAccount = Optional.empty();
     }

@@ -2,8 +2,8 @@ package com.ga.project;
 
 public class Banker extends User {
 
-    public Banker(String id, String name, String encryptedPassword) {
-        super(id, name, encryptedPassword);
+    public Banker(String id, String firstName, String lastName, String encryptedPassword) {
+        super(id, firstName, lastName, encryptedPassword);
     }
 
     @Override
