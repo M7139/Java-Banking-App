@@ -1,7 +1,9 @@
 package com.ga.project;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class Account {
     protected String accountNumber;
@@ -18,6 +20,41 @@ public abstract class Account {
         this.active = true;
         this.card = card;
         this.transactions = new ArrayList<>();
+    }
+
+    public String deposit(double amount) {
+        if (amount <= 0) {
+            return "INVALID_AMOUNT";
+        }
+
+        balance += amount;
+        recordTransaction("DEPOSIT", amount);
+        return "SUCCESS";
+    }
+
+    public String withdraw(double amount) {
+        if (amount <= 0) {
+            return "INVALID_AMOUNT";
+        }
+
+        if (amount > balance) {
+            return "INSUFFICIENT_FUNDS";
+        }
+
+        balance -= amount;
+        recordTransaction("WITHDRAW", amount);
+        return "SUCCESS";
+    }
+
+    protected void recordTransaction(String type, double amount) {
+        Transaction transaction = new Transaction(
+                UUID.randomUUID().toString(),
+                type,
+                amount,
+                balance,
+                LocalDateTime.now()
+        );
+        transactions.add(transaction);
     }
 
     public String getAccountNumber() {
