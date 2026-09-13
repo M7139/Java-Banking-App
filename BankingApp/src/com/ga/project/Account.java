@@ -61,6 +61,16 @@ public abstract class Account {
         );
         transactions.add(transaction);
     }
+    public String transferTo(Account destination, double amount) {
+        String withdrawResult = this.withdraw(amount);
+
+        if (!withdrawResult.equals("SUCCESS")) {
+            return withdrawResult;
+        }
+
+        destination.deposit(amount);
+        return "SUCCESS";
+    }
 
     public String getAccountNumber() {
         return accountNumber;
