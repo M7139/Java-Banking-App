@@ -12,6 +12,7 @@ public abstract class Account {
     protected boolean active;
     protected Card card;
     protected List<Transaction> transactions;
+    protected OverdraftPolicy overdraftPolicy;
 
     public Account(String accountNumber, Card card) {
         this.accountNumber = accountNumber;
@@ -20,6 +21,7 @@ public abstract class Account {
         this.active = true;
         this.card = card;
         this.transactions = new ArrayList<>();
+        this.overdraftPolicy = new OverdraftPolicy();
     }
 
     public String deposit(double amount) {
@@ -29,6 +31,9 @@ public abstract class Account {
 
         balance += amount;
         recordTransaction("DEPOSIT", amount);
+
+        overdraftPolicy.reactivateIfEligible(this);
+
         return "SUCCESS";
     }
 
@@ -37,13 +42,13 @@ public abstract class Account {
             return "INVALID_AMOUNT";
         }
 
-        if (amount > balance) {
-            return "INSUFFICIENT_FUNDS";
+        String result = overdraftPolicy.processWithdrawal(this, amount);
+
+        if (result.equals("SUCCESS")) {
+            recordTransaction("WITHDRAW", amount);
         }
 
-        balance -= amount;
-        recordTransaction("WITHDRAW", amount);
-        return "SUCCESS";
+        return result;
     }
 
     protected void recordTransaction(String type, double amount) {
