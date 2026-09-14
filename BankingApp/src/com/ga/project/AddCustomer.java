@@ -9,7 +9,7 @@ public class AddCustomer {
         this.passwordEncryptor = passwordEncryptor;
     }
 
-    public Customer addNewCustomer(String id, String firstName, String lastName, String rawPassword,
+    public Customer addNewCustomer(Banker banker, String id, String firstName, String lastName, String rawPassword,
                                    boolean addChecking, boolean addSavings, String cardType) {
 
         String encryptedPassword = passwordEncryptor.encrypt(rawPassword);

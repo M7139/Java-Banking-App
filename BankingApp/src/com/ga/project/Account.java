@@ -23,7 +23,8 @@ public abstract class Account {
         this.transactions = new ArrayList<>();
         this.overdraftPolicy = new OverdraftPolicy();
     }
-    public String deposit(double amount){
+
+    public String deposit(double amount) {
         return deposit(amount, true);
     }
 
@@ -69,7 +70,7 @@ public abstract class Account {
             return transferLimitCheck;
         }
 
-        String receivingLimitCheck = destination.card.checkAndRecordTransfer(amount, isOwnAccount);
+        String receivingLimitCheck = destination.card.checkAndRecordDeposit(amount, isOwnAccount);
         if (!receivingLimitCheck.equals("SUCCESS")) {
             return receivingLimitCheck;
         }
@@ -89,6 +90,7 @@ public abstract class Account {
     protected void recordTransaction(String type, double amount) {
         Transaction transaction = new Transaction(
                 UUID.randomUUID().toString(),
+                getAccountType(),
                 type,
                 amount,
                 balance,
@@ -96,6 +98,8 @@ public abstract class Account {
         );
         transactions.add(transaction);
     }
+
+    protected abstract String getAccountType();
 
     public String getAccountNumber() {
         return accountNumber;
