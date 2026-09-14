@@ -13,8 +13,8 @@ public abstract class Card {
     private double withdrawnToday;
     private double transferredToday;
     private double transferredOwnToday;
-    private double cashDepositedToday;
-    private double incomingTransferToday;
+    private double depositedOwnToday;
+    private double depositedOtherToday;
     private LocalDate lastResetDate;
 
     public Card(String cardNumber) {
@@ -22,8 +22,8 @@ public abstract class Card {
         this.withdrawnToday = 0;
         this.transferredToday = 0;
         this.transferredOwnToday = 0;
-        this.cashDepositedToday = 0;
-        this.incomingTransferToday = 0;
+        this.depositedOwnToday = 0;
+        this.depositedOtherToday = 0;
         this.lastResetDate = LocalDate.now();
     }
 
@@ -33,8 +33,8 @@ public abstract class Card {
             withdrawnToday = 0;
             transferredToday = 0;
             transferredOwnToday = 0;
-            cashDepositedToday = 0;
-            incomingTransferToday = 0;
+            depositedOwnToday = 0;
+            depositedOtherToday = 0;
             lastResetDate = today;
         }
     }
@@ -64,23 +64,20 @@ public abstract class Card {
         return "SUCCESS";
     }
 
-    //Cash deposit
-    public String checkAndRecordDeposit(double amount) {
-        resetIfNewDay();
-        if (cashDepositedToday + amount > depositLimitPerDayOwnAccount) {
-            return "DAILY_LIMIT_EXCEEDED";
-        }
-        cashDepositedToday += amount;
-        return "SUCCESS";
-    }
 
-    //Money from other account
-    public String checkAndRecordIncomingTransfer(double amount) {
+    public String checkAndRecordDeposit(double amount, boolean isOwnAccount) {
         resetIfNewDay();
-        if (incomingTransferToday + amount > depositLimitPerDay) {
-            return "DAILY_LIMIT_EXCEEDED";
+        if (isOwnAccount) {
+            if (depositedOwnToday + amount > depositLimitPerDayOwnAccount) {
+                return "DAILY_LIMIT_EXCEEDED";
+            }
+            depositedOwnToday += amount;
+        } else {
+            if (depositedOtherToday + amount > depositLimitPerDay) {
+                return "DAILY_LIMIT_EXCEEDED";
+            }
+            depositedOtherToday += amount;
         }
-        incomingTransferToday += amount;
         return "SUCCESS";
     }
 

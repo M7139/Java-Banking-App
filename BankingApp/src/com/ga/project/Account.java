@@ -23,13 +23,16 @@ public abstract class Account {
         this.transactions = new ArrayList<>();
         this.overdraftPolicy = new OverdraftPolicy();
     }
+    public String deposit(double amount){
+        return deposit(amount, true);
+    }
 
-    public String deposit(double amount) {
+    public String deposit(double amount, boolean isOwnAccount) {
         if (amount <= 0) {
             return "INVALID_AMOUNT";
         }
 
-        String limitCheck = card.checkAndRecordDeposit(amount);
+        String limitCheck = card.checkAndRecordDeposit(amount, isOwnAccount);
         if (!limitCheck.equals("SUCCESS")) {
             return limitCheck;
         }
@@ -66,7 +69,7 @@ public abstract class Account {
             return transferLimitCheck;
         }
 
-        String receivingLimitCheck = destination.card.checkAndRecordIncomingTransfer(amount);
+        String receivingLimitCheck = destination.card.checkAndRecordTransfer(amount, isOwnAccount);
         if (!receivingLimitCheck.equals("SUCCESS")) {
             return receivingLimitCheck;
         }
