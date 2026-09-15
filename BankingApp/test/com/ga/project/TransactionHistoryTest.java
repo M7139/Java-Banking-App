@@ -5,8 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 public class TransactionHistoryTest {
 
     TransactionHistory transactionHistory;
@@ -43,6 +41,32 @@ public class TransactionHistoryTest {
         Assert.assertTrue(result.contains("WITHDRAW"));
         Assert.assertTrue(result.contains("CHECKING"));
         Assert.assertTrue(result.contains("500.0"));
-        Assert.assertTrue(result.contains("300.0")); // balance after withdraw
+        Assert.assertTrue(result.contains("300.0"));
+    }
+
+    @Test
+    @DisplayName("When generating a statement then it shows balance, account number, and transactions")
+    public final void whenGeneratingStatementThenShowsKeyDetails() {
+        checking.deposit(500);
+        checking.withdraw(200);
+
+        String statement = transactionHistory.generateStatement(customer, checking);
+
+        Assert.assertTrue(statement.contains("Melvin Gordon"));
+        Assert.assertTrue(statement.contains("CHK-10001"));
+        Assert.assertTrue(statement.contains("Current Balance: 300.0"));
+        Assert.assertTrue(statement.contains("DEPOSIT"));
+        Assert.assertTrue(statement.contains("WITHDRAW"));
+    }
+
+    @Test
+    @DisplayName("When generating a statement with no transactions then it still shows balance and account info")
+    public final void whenNoTransactionsThenStillShowsBalanceAndAccountInfo() {
+        String statement = transactionHistory.generateStatement(customer, checking);
+
+        Assert.assertTrue(statement.contains("Melvin Gordon"));
+        Assert.assertTrue(statement.contains("CHK-10001"));
+        Assert.assertTrue(statement.contains("Current Balance: 0.0"));
+        Assert.assertTrue(statement.contains("No transactions found."));
     }
 }

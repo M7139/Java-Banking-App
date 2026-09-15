@@ -24,4 +24,15 @@ public class TransactionHistory {
 
         return result.toString();
     }
+
+    public String generateStatement(Customer customer, Account account){
+        StringBuilder result = new StringBuilder();
+        result.append("Account Statement for ").append(customer.getFullName()).append("\n");
+        result.append("Account Number:  ").append(account.getAccountNumber()).append("\n");
+        result.append("Current Balance: ").append(account.getBalance()).append("\n");
+        result.append("-------------------------------\n");
+        result.append(display(customer, account.getTransactions()));
+
+        return result.toString();
+    }
 }
