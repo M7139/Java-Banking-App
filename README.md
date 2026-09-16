@@ -144,4 +144,4 @@ The ERD below shows the main structure of the banking system.
 
 
 ```markdown
-![ACME Bank ERD](BankingApp/images/ERD.png)
+![ACME Bank ERD](./BankingApp/images/ERD.png)
