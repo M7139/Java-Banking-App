@@ -12,6 +12,18 @@ public class Bank {
         this.fileManager = fileManager;
         this.bankers = fileManager.loadBankers();
         this.customers = fileManager.loadCustomers();
+
+        for (Customer customer : customers) {
+            List<Transaction> history = fileManager.loadTransactions(customer);
+
+            for (Transaction transaction : history) {
+                if (transaction.getAccountType().equals("CHECKING") && customer.getCheckingAccount().isPresent()) {
+                    customer.getCheckingAccount().get().getTransactions().add(transaction);
+                } else if (transaction.getAccountType().equals("SAVINGS") && customer.getSavingsAccount().isPresent()) {
+                    customer.getSavingsAccount().get().getTransactions().add(transaction);
+                }
+            }
+        }
     }
 
     public List<Banker> getBankers() {
