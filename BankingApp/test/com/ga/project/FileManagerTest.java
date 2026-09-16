@@ -32,11 +32,11 @@ public class FileManagerTest {
         AddCustomer addCustomer = new AddCustomer(passwordEncryptor);
         Banker banker = new Banker("B001", "Saad", "Iqbal", passwordEncryptor.encrypt("bankerpass"));
 
-        Customer customer1 = addCustomer.addNewCustomer(banker, "10001", "Melvin", "Gordon", "pass123", true, true, "PLATINUM");
+        Customer customer1 = addCustomer.addNewCustomer("10001", "Melvin", "Gordon", "pass123", true, true, "PLATINUM");
         customer1.getCheckingAccount().get().deposit(500);
         customer1.getSavingsAccount().get().deposit(2000);
 
-        Customer customer2 = addCustomer.addNewCustomer(banker, "10002", "Stacey", "Abrams", "pass456", true, false, "TITANIUM");
+        Customer customer2 = addCustomer.addNewCustomer("10002", "Stacey", "Abrams", "pass456", true, false, "TITANIUM");
         customer2.getCheckingAccount().get().deposit(1000);
 
         List<Customer> customers = Arrays.asList(customer1, customer2);

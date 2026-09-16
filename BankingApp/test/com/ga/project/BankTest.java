@@ -54,7 +54,7 @@ public class BankTest {
         AddCustomer addCustomer = new AddCustomer(encryptor);
         Banker banker = new Banker("B001", "Saad", "Iqbal", encryptor.encrypt("bankerpass"));
 
-        Customer newCustomer = addCustomer.addNewCustomer(banker, "10003", "Micheal", "Paul", "pass123", true, false, "MASTERCARD");
+        Customer newCustomer = addCustomer.addNewCustomer("10003", "Micheal", "Paul", "pass123", true, false, "MASTERCARD");
         bank.addCustomer(newCustomer);
 
         Bank reloadedBank = new Bank(new FileManager());

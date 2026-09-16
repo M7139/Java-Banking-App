@@ -92,15 +92,50 @@ public class BankerMenu {
             return;
         }
 
-        System.out.print("Enter card type (PLATINUM, TITANIUM, MASTERCARD): ");
-        String cardType = scanner.nextLine();
+        String cardType = "";
+
+        while (true) {
+            System.out.println("Choose card type:");
+            System.out.println("1. Mastercard");
+            System.out.println("2. Mastercard Titanium");
+            System.out.println("3. Mastercard Platinum");
+            System.out.print("Enter choice: ");
+
+            String cardChoice = scanner.nextLine();
+
+            if (cardChoice.equals("1")) {
+                cardType = "MASTERCARD";
+                break;
+            } else if (cardChoice.equals("2")) {
+                cardType = "TITANIUM";
+                break;
+            } else if (cardChoice.equals("3")) {
+                cardType = "PLATINUM";
+                break;
+            } else {
+                System.out.println("Invalid option, please try again.");
+            }
+        }
 
         PasswordEncryptor passwordEncryptor = new PasswordEncryptor();
         AddCustomer addCustomer = new AddCustomer(passwordEncryptor);
 
-        Customer customer = addCustomer.addNewCustomer(banker, id, firstName, lastName, password, addChecking, addSavings, cardType);
+        Customer customer = addCustomer.addNewCustomer(
+                id,
+                firstName,
+                lastName,
+                password,
+                addChecking,
+                addSavings,
+                cardType
+        );
+
         bank.addCustomer(customer);
 
-        System.out.println("Customer " + customer.getFullName() + " added successfully with ID " + id + ".");
+        System.out.println(
+                "Customer " + customer.getFullName()
+                        + " added successfully with ID "
+                        + id + "."
+        );
     }
 }

@@ -12,12 +12,12 @@ public class SeedData {
         bank.getBankers().add(banker);
         bank.saveBankers();
 
-        Customer customer = addCustomer.addNewCustomer(banker, "C001", "Mohamed", "Aljaomee", "custpass", true, true, "PLATINUM");
+        Customer customer = addCustomer.addNewCustomer("C001", "Mohamed", "Aljaomee", "custpass", true, true, "PLATINUM");
         customer.getCheckingAccount().get().deposit(1000);
         customer.getSavingsAccount().get().deposit(500);
         bank.addCustomer(customer);
 
-        Customer customer2 = addCustomer.addNewCustomer(banker, "C002", "Rashad", "Abdulla", "custpass", true, true, "PLATINUM");
+        Customer customer2 = addCustomer.addNewCustomer("C002", "Rashad", "Abdulla", "custpass", true, true, "PLATINUM");
         customer2.getCheckingAccount().get().deposit(1000);
         customer2.getSavingsAccount().get().deposit(500);
         bank.addCustomer(customer2);

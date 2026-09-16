@@ -64,23 +64,52 @@ public abstract class Account {
         return result;
     }
 
+    private String processWithdrawalWithoutCardLimit(double amount) {
+        if (amount <= 0) {
+            return "INVALID_AMOUNT";
+        }
+
+        String result = overdraftPolicy.processWithdrawal(this, amount);
+
+        if (result.equals("SUCCESS")) {
+            recordTransaction("WITHDRAW", amount);
+        }
+
+        return result;
+    }
+
     public String transferTo(Account destination, double amount, boolean isOwnAccount) {
-        String transferLimitCheck = card.checkAndRecordTransfer(amount, isOwnAccount);
+        if (amount <= 0) {
+            return "INVALID_AMOUNT";
+        }
+
+
+        String transferLimitCheck = card.checkTransferLimit(amount, isOwnAccount);
         if (!transferLimitCheck.equals("SUCCESS")) {
             return transferLimitCheck;
         }
 
-        String receivingLimitCheck = destination.card.checkAndRecordDeposit(amount, isOwnAccount);
+
+        String receivingLimitCheck =
+                destination.card.checkDepositLimit(amount, isOwnAccount);
+
         if (!receivingLimitCheck.equals("SUCCESS")) {
             return receivingLimitCheck;
         }
 
-        String withdrawResult = this.withdraw(amount);
+
+        String withdrawResult = processWithdrawalWithoutCardLimit(amount);
         if (!withdrawResult.equals("SUCCESS")) {
             return withdrawResult;
         }
 
+
         destination.balance += amount;
+
+
+        card.recordTransfer(amount, isOwnAccount);
+        destination.card.recordDeposit(amount, isOwnAccount);
+
         destination.recordTransaction("DEPOSIT", amount);
         destination.overdraftPolicy.reactivateIfEligible(destination);
 
